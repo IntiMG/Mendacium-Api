@@ -1,0 +1,21 @@
+### 1. Ver todas las salas
+GET http://localhost:8080/api/sala/all
+
+### 2. Crear sala (host)
+POST http://localhost:8080/api/sala/crear
+Content-Type: application/json
+
+{
+  "hostNombre": "Juan"
+}
+
+### 3. Unirse con código (reemplaza XXXXX con el código del paso 2)
+POST http://localhost:8080/api/sala/VW3PK/unirse
+Content-Type: application/json
+
+{
+  "nombre": "Pedro"
+}
+
+### 4. Ver sala por código
+GET http://localhost:8080/api/sala/getCodigo/VW3PK
