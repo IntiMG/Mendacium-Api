@@ -6,11 +6,11 @@ POST http://localhost:8080/api/sala/crear
 Content-Type: application/json
 
 {
-  "hostNombre": "Juan"
+  "hostNombre": "Cash"
 }
 
-### 3. Unirse con código (reemplaza XXXXX con el código del paso 2)
-POST http://localhost:8080/api/sala/VW3PK/unirse
+### 3. Unirse con código
+POST http://localhost:8080/api/sala/XXXXX/unirse
 Content-Type: application/json
 
 {
@@ -18,4 +18,4 @@ Content-Type: application/json
 }
 
 ### 4. Ver sala por código
-GET http://localhost:8080/api/sala/getCodigo/VW3PK
+GET http://localhost:8080/api/sala/getCodigo/XXXXX

@@ -1,12 +1,15 @@
 package com.mendacium.mendaciumapi.service;
 
 import com.mendacium.mendaciumapi.model.Jugador;
+import com.mendacium.mendaciumapi.model.MensajeJuego;
 import com.mendacium.mendaciumapi.model.Sala;
 import com.mendacium.mendaciumapi.repository.RepositoryJugador;
 import com.mendacium.mendaciumapi.repository.RepositorySala;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -17,11 +20,14 @@ public class ServiceSala {
 
     private final RepositorySala repo;
     private final RepositoryJugador repoJugador;
+    private final SimpMessagingTemplate messaging;
     private final Random random = new Random();
 
-    public ServiceSala(RepositorySala repo, RepositoryJugador repoJugador) {
+    public ServiceSala(RepositorySala repo, RepositoryJugador repoJugador,
+                       SimpMessagingTemplate messaging) {
         this.repo = repo;
         this.repoJugador = repoJugador;
+        this.messaging = messaging;
     }
 
     public List<Sala> findAll() {
@@ -59,7 +65,15 @@ public class ServiceSala {
         }
 
         Jugador jugador = new Jugador(nombre, false, sala);
-        return repoJugador.save(jugador);
+        Jugador guardado = repoJugador.save(jugador);
+
+        // Avisa por WebSocket a todos los que estén en el lobby de esta sala.
+        // El cliente reacciona refrescando la lista (vía REST), así no dependemos
+        // de construir la lista completa aquí.
+        messaging.convertAndSend("/topic/sala/" + codigo,
+                new MensajeJuego("JUGADOR_UNIDO", Map.of("nombre", nombre)));
+
+        return guardado;
     }
 
     private String generarCodigoUnico() {
