@@ -197,11 +197,23 @@ public class ServicePartida {
     @Transactional
     public void registrarVoto(String codigo, String jugador, String votado) {
         Sala sala = obtenerSala(codigo);
+
+        Set<String> vivos = repoJugador.findBySalaCodigo(codigo).stream()
+                .filter(Jugador::isVivo)
+                .map(Jugador::getNombre)
+                .collect(Collectors.toSet());
+
+        // Solo los jugadores vivos cuentan para la votación (los muertos no votan)
+        if (!vivos.contains(jugador)) {
+            return;
+        }
+
         sala.getVotosDia().put(jugador, votado == null ? "ABSTENCION" : votado);
         repoSala.save(sala);
 
-        long vivos = repoJugador.findBySalaCodigo(codigo).stream().filter(Jugador::isVivo).count();
-        if (sala.getVotosDia().size() >= vivos) {
+        // Resuelve cuando TODOS los vivos ya votaron
+        long votosDeVivos = sala.getVotosDia().keySet().stream().filter(vivos::contains).count();
+        if (votosDeVivos >= vivos.size()) {
             resolverLinchamiento(codigo);
         }
     }

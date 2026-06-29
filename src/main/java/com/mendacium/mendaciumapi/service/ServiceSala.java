@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -62,6 +63,14 @@ public class ServiceSala {
 
         if (!sala.getEstadoSala().equals("ESPERANDO")) {
             throw new RuntimeException("La sala ya no acepta jugadores");
+        }
+
+        // Idempotente: si ya hay un jugador con ese nombre en la sala, devuélvelo.
+        // Evita duplicados por doble toque del botón o reintentos. Además los nombres
+        // deben ser únicos porque el WebSocket usa /queue/jugador/{nombre} por jugador.
+        Optional<Jugador> existente = repoJugador.findBySalaCodigoAndNombre(codigo, nombre);
+        if (existente.isPresent()) {
+            return existente.get();
         }
 
         Jugador jugador = new Jugador(nombre, false, sala);
