@@ -77,8 +77,7 @@ public class ServiceSala {
         Jugador guardado = repoJugador.save(jugador);
 
         // Avisa por WebSocket a todos los que estén en el lobby de esta sala.
-        // El cliente reacciona refrescando la lista (vía REST), así no dependemos
-        // de construir la lista completa aquí.
+        // El cliente reacciona refrescando la lista (vía REST)
         messaging.convertAndSend("/topic/sala/" + codigo,
                 new MensajeJuego("JUGADOR_UNIDO", Map.of("nombre", nombre)));
 

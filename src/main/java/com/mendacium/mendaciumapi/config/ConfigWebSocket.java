@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class ConfigWebSocket implements WebSocketMessageBrokerConfigurer {
 
     // El cliente Android se conecta a: ws://10.0.2.2:8080/api/ws
-    // (el /api viene del context-path; aquí solo declaramos /ws)
+    // (el /api viene del context-path; aquí solo se declara /ws)
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*");

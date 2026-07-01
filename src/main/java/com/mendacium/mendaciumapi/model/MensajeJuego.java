@@ -2,7 +2,7 @@ package com.mendacium.mendaciumapi.model;
 
 // Envoltorio de todos los mensajes que viajan por WebSocket.
 // tipo  -> qué clase de evento es ("JUGADOR_UNIDO", "PARTIDA_INICIADA", ...)
-// payload -> el objeto con los datos (normalmente un Map)
+// payload -> el objeto con los datos
 public class MensajeJuego {
 
     private String tipo;

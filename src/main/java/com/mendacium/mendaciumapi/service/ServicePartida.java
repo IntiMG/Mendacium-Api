@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class ServicePartida {
 
-    // Roles (en texto, sin acentos para evitar problemas de codificación en la red)
+    // Roles
     private static final String IMPOSTOR = "IMPOSTOR";
     private static final String MEDICO = "MEDICO";
     private static final String VIDENTE = "VIDENTE";
@@ -43,7 +43,7 @@ public class ServicePartida {
         this.messaging = messaging;
     }
 
-    // ───────────────────────────── Inicio de partida ─────────────────────────────
+    // Inicio de partida
 
     @Transactional
     public void asignarRoles(String codigo, int impostorCount, int doctorCount, int seerCount) {
@@ -96,7 +96,7 @@ public class ServicePartida {
         }
     }
 
-    // ───────────────────────────── Fase de noche ─────────────────────────────
+    // Fase de noche
 
     @Transactional
     public void registrarAccionNoche(String codigo, String jugador, String tipo, String objetivo) {
@@ -151,7 +151,7 @@ public class ServicePartida {
         verificarFin(codigo);
     }
 
-    // ───────────────────────────── Avances controlados por el host ─────────────────────────────
+    // Avances controlados por el host
 
     @Transactional
     public void continuarDia(String codigo) {
@@ -192,7 +192,7 @@ public class ServicePartida {
         enviarATopic(codigo, new MensajeJuego("FASE_NOCHE", payload));
     }
 
-    // ───────────────────────────── Fase de día / votación ─────────────────────────────
+    // Fase de día / votación
 
     @Transactional
     public void registrarVoto(String codigo, String jugador, String votado) {
@@ -251,7 +251,7 @@ public class ServicePartida {
         verificarFin(codigo);
     }
 
-    // ───────────────────────────── Victoria ─────────────────────────────
+    // Victoria
 
     public String evaluarVictoria(String codigo) {
         List<Jugador> vivos = repoJugador.findBySalaCodigo(codigo).stream()
@@ -289,7 +289,7 @@ public class ServicePartida {
         }
     }
 
-    // ───────────────────────────── Helpers ─────────────────────────────
+    // Helpers
 
     private int accionesEsperadas(String codigo) {
         List<Jugador> vivos = repoJugador.findBySalaCodigo(codigo).stream()
